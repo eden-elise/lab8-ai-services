@@ -57,8 +57,10 @@
 
         responseDiv.textContent = 'Loading...';
 
+        const startTime = performance.now();
+
         try {
-            // Current Gemini REST API endpoint (v1beta with gemini-2.0-flash)
+            //Current Gemini REST API endpoint (v1beta with gemini-2.0-flash)
             const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             const response = await fetch(url, {
@@ -76,19 +78,29 @@
             });
 
             const data = await response.json();
+            const endTime = performance.now();
+            const duration = ((endTime - startTime) / 1000).toFixed(2);
 
             if (data.error) {
                 responseDiv.textContent = 'Error: ' + JSON.stringify(data.error, null, 2);
             } else {
-                // Extract the text from Gemini's response
                 const aiResponse = data.candidates[0].content.parts[0].text;
-                responseDiv.textContent = 'Gemini says:\n\n' + aiResponse;
+
+
+                let tokenInfo = '';
+                if (data.usageMetadata) {
+                    tokenInfo = `\n\n---\nTokens used: ${data.usageMetadata.totalTokenCount || 'N/A'}`;
+                }
+
+                responseDiv.textContent = `Gemini says (${duration}s):${tokenInfo}\n\n${aiResponse}`;
 
                 console.log('Full API response:', data);
             }
 
         } catch (error) {
-            responseDiv.textContent = 'Error: ' + error.message;
+            const endTime = performance.now();
+            const duration = ((endTime - startTime) / 1000).toFixed(2);
+            responseDiv.textContent = `Error after ${duration}s: ${error.message}`;
             console.error('Full error:', error);
         }
     }
