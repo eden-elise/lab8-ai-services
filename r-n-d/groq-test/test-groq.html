@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groq API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        h1 {
+            color: #f55036;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            border-left: 4px solid #f55036;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #f55036;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #d43d28;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+            background: #2a2a2a;
+            color: #fff;
+            border: 1px solid #444;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #aaa;
+        }
+        .info {
+            background: #2a2a2a;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+<h1>Groq API Test</h1>
+
+<div class="info">
+    <strong>Groq Info:</strong> Uses open-source models like Llama. Known for extremely fast inference speeds.
+</div>
+
+<label for="apiKey">Enter your Groq API Key:</label>
+<input type="password" id="apiKey" placeholder="Your Groq API key here">
+
+<label for="prompt">Ask Groq something:</label>
+<input type="text" id="prompt" placeholder="What is the meaning of life?" value="Explain quantum computing in simple terms">
+
+<button onclick="testGroq()">Send to Groq</button>
+
+<div id="response"></div>
+
+<script>
+    async function testGroq() {
+        const apiKey = document.getElementById('apiKey').value;
+        const prompt = document.getElementById('prompt').value;
+        const responseDiv = document.getElementById('response');
+
+        if (!apiKey) {
+            responseDiv.textContent = 'Please enter your API key!';
+            return;
+        }
+
+        responseDiv.textContent = 'Loading...';
+
+        const startTime = performance.now();
+
+        try {
+            const url = 'https://api.groq.com/openai/v1/chat/completions';
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'llama-3.3-70b-versatile',
+                    messages: [
+                        {
+                            role: 'user',
+                            content: prompt
+                        }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 1024
+                })
+            });
+
+            const data = await response.json();
+            const endTime = performance.now();
+            const duration = ((endTime - startTime) / 1000).toFixed(2);
+
+            if (data.error) {
+                responseDiv.textContent = 'Error: ' + JSON.stringify(data.error, null, 2);
+            } else {
+                const aiResponse = data.choices[0].message.content;
+
+                responseDiv.textContent = `Groq says (${duration}s):\n\n${aiResponse}\n\n---\nModel: ${data.model}\nTokens used: ${data.usage.total_tokens}`;
+
+                console.log('Full Groq response:', data);
+            }
+
+        } catch (error) {
+            responseDiv.textContent = 'Error: ' + error.message;
+            console.error('Full error:', error);
+        }
+    }
+</script>
+</body>
+</html>
