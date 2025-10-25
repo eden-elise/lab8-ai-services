@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 5px;
+            white-space: pre-wrap;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<h1>Gemini API Test - Direct REST</h1>
+
+<label for="apiKey">Enter your Gemini API Key:</label>
+<input type="password" id="apiKey" placeholder="Your API key here">
+
+<label for="prompt">Ask Gemini something:</label>
+<input type="text" id="prompt" placeholder="What is the meaning of life?" value="Tell me a fun fact about computers">
+
+<button onclick="testGemini()">Send to Gemini</button>
+
+<div id="response"></div>
+
+<script>
+    async function testGemini() {
+        const apiKey = document.getElementById('apiKey').value;
+        const prompt = document.getElementById('prompt').value;
+        const responseDiv = document.getElementById('response');
+
+        if (!apiKey) {
+            responseDiv.textContent = 'Please enter your API key!';
+            return;
+        }
+
+        responseDiv.textContent = 'Loading...';
+
+        try {
+            // Current Gemini REST API endpoint (v1beta with gemini-2.0-flash)
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: prompt
+                        }]
+                    }]
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                responseDiv.textContent = 'Error: ' + JSON.stringify(data.error, null, 2);
+            } else {
+                // Extract the text from Gemini's response
+                const aiResponse = data.candidates[0].content.parts[0].text;
+                responseDiv.textContent = 'Gemini says:\n\n' + aiResponse;
+
+                console.log('Full API response:', data);
+            }
+
+        } catch (error) {
+            responseDiv.textContent = 'Error: ' + error.message;
+            console.error('Full error:', error);
+        }
+    }
+</script>
+</body>
+</html>
