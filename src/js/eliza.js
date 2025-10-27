@@ -3,7 +3,7 @@
  *
  * This module provides simple pattern matching for chatbot responses.
  * Import this module to use the getBotResponse() function in your chat implementations.
- *
+ *d
  * Usage:
  *   import { getBotResponse } from './eliza.js';
  *   const response = getBotResponse("Hello there!");
