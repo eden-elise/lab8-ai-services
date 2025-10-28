@@ -1,6 +1,6 @@
-import ElizaService from './ElizaService.js';
-import GeminiService from './GeminiService.js';
-import GroqService from './GroqService.js';
+import ElizaService from "./ElizaService.js";
+import GeminiService from "./GeminiService.js";
+ // import GroqService from "./GroqService.js";
 
 /**
  * for creating AI services
@@ -15,18 +15,18 @@ class AIServiceFactory {
      */
     static createService(type, apiKey = null) {
         switch (type.toLowerCase()) {
-            case 'eliza':
+            case "eliza":
                 return new ElizaService();
 
-            case 'gemini':
+            case "gemini":
                  if (!apiKey) {
-                     throw new Error('Gemini service requires an API key');
+                     throw new Error("Gemini service requires an API key");
                  }
                  return new GeminiService(apiKey);
 
-             case 'groq':
+             case "groq":
                  if (!apiKey) {
-                     throw new Error('Groq service requires an API key');
+                     throw new Error("Groq service requires an API key");
                  }
                  return new GroqService(apiKey);
 
@@ -41,9 +41,9 @@ class AIServiceFactory {
      */
     static getAvailableServices() {
         return [
-            { value: 'eliza', name: 'Eliza (Local)', requiresKey: false },
-            { value: 'gemini', name: 'Gemini (Cloud)', requiresKey: true },
-            { value: 'groq', name: 'Groq (Cloud)', requiresKey: true }
+            { value: "eliza", name: "Eliza (Local)", requiresKey: false },
+            { value: "gemini", name: "Gemini (Cloud)", requiresKey: true },
+            { value: "groq", name: "Groq (Cloud)", requiresKey: true }
         ];
     }
 }
