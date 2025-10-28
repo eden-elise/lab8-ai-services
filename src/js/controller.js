@@ -1,6 +1,7 @@
 import chatModel from "./model.js";
 import chatView from "./view.js";
-import AIServiceFactory from "../services/ServiceSelector.js";
+import ServiceSelector from "../services/ServiceSelector.js";
+import serviceSelector from "../services/ServiceSelector.js";
 
 
 
@@ -13,7 +14,12 @@ class ChatController {
         this.model = new chatModel();
         this.view = new chatView();
 
-        this.currentService = AIServiceFactory.createService('eliza');
+        this.apiKey = {
+            gemini: null,
+            groq: null
+        };
+
+        this.provider = ServiceSelector.createService('eliza');
         this.init();
     }
 
@@ -57,11 +63,50 @@ class ChatController {
         document.addEventListener("messages-import", (e) => {
             this.handleImport(e.detail.file);
         });
+
+        document.addEventListener("ai-provider-change", (e) => {
+            this.handleProviderChange(e.detail.provider, e.detail.apiKey);
+        });
+    }
+
+    /**
+     * switch AI provider
+     * @param {string} provider - provider type
+     * @param {string} apiKey - API key (if needed)
+     */
+    handleProviderChange(provider, apiKey = null) {
+        try {
+            const serviceInfo = ServiceSelector.getAvailableServices().find(s => s.value === provider);
+
+            if (serviceInfo && serviceInfo.requiresKey && !apiKey) {
+                apiKey = prompt(`Enter your ${serviceInfo.name} API key:`);
+
+                if (!apiKey) {
+                    alert("API key required.");
+                    return;
+                }
+                this.apiKey[provider] = apiKey;
+
+            } else if (this.apiKey[provider]) {
+                apiKey = this.apiKey[provider];
+            }
+
+            // Create new service
+            this.currentService = ServiceSelector.createService(provider, apiKey);
+
+            // Add system message to show provider change
+            this.model.createMessage(`Switched to ${this.provider.getName()}`, false);
+            console.log(`Switched to ${this.provider.getName()}`);
+
+        } catch (error) {
+            console.error("Sorry there has been a provider switch error: ", error);
+            alert(`Error switching provider: ${error.message}`);
+        }
     }
 
     /**
      * handle sending a new message
-     * @param {string} text - User"s message text
+     * @param {string} text - User's message text
      */
     async handleMessageSend(text) {
         this.model.createMessage(text, true);
@@ -101,7 +146,7 @@ class ChatController {
 
     /**
      * handle deleting a message
-     * @param {string} id - Message ID to delete
+     * @param {string} id - message ID to delete
      */
     handleMessageDelete(id) {
         this.model.deleteMessage(id);
