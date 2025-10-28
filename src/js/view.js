@@ -14,6 +14,8 @@ class chatView {
         this.clearButton = document.getElementById("clear-button");
         this.fileInput = document.getElementById("file-input");
 
+        this.aiProviderSelect = document.getElementById("ai-provider");
+
         this.setUpEventListeners()
     }
 
@@ -57,7 +59,17 @@ class chatView {
                 }));
                 this.fileInput.value = ""; //ME: reset
             }
-        })
+        });
+
+        this.aiProviderSelect.addEventListener("change", (e) => {
+            const selectedProvider = e.target.value;
+            document.dispatchEvent(new CustomEvent("ai-provider-change", {
+                detail: {
+                    provider: selectedProvider,
+                    apiKey: null  // controller prompts
+                }
+            }));
+        });
     }
 
     /**

@@ -10,6 +10,14 @@
 <main class="chat-container">
     <header class="chat-header">
         <h1>Eliza Style Chat Bot</h1>
+        <div class="ai-provider-selector">
+            <label for="ai-provider">AI Provider:</label>
+            <select id="ai-provider">
+                <option value="eliza" selected>Eliza (Local)</option>
+                <option value="gemini">Gemini (Cloud)</option>
+                <option value="groq">Groq (Cloud)</option>
+            </select>
+        </div>
         <div class="chat-controls">
             <span class="message-count">Messages: <strong id="message-count">0</strong></span>
             <!--ME: using double class prevents DRY -->

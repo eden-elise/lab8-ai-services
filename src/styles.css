@@ -1,5 +1,4 @@
 :root {
-
     --color-cream: #F5F1E8;
     --color-sage: #A8B89F;
     --color-forest: #4A6741;
@@ -85,6 +84,16 @@
     --line-height: 1.4;
 
 
+    /* AI Provider Selector */
+    --selector-gap: 0.625rem;
+    --selector-margin: 0.625rem 0;
+    --selector-label-font-size: 0.875rem;
+    --selector-padding: 0.5rem 0.75rem;
+    --selector-font-size: 0.875rem;
+    --selector-border-width: 0.125rem;
+    --selector-border-radius: 0.375rem;
+
+
 }
 
 /* clearing existing styles */
@@ -146,6 +155,41 @@ body {
     margin-right: auto;
 }
 
+
+.ai-provider-selector {
+    display: flex;
+    align-items: center;
+    gap: var(--selector-gap);
+    margin: var(--selector-margin);
+}
+
+.ai-provider-selector label {
+    font-weight: 600;
+    color: var(--color-cream);
+    font-size: var(--selector-label-font-size);
+}
+
+#ai-provider {
+    padding: var(--selector-padding);
+    border: var(--selector-border-width) solid var(--color-moss);
+    border-radius: var(--selector-border-radius);
+    font-size: var(--selector-font-size);
+    background: var(--color-white);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#ai-provider:hover {
+    border-color: var(--color-sage);
+    opacity: var(--hover-opacity);
+}
+
+#ai-provider:focus {
+    outline: none;
+    border-color: var(--color-sage);
+    box-shadow: var(--focus-shadow);
+}
 
 .btn {
     padding: 0.5rem 1rem;
