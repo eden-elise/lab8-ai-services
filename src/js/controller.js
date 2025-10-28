@@ -1,6 +1,6 @@
 import chatModel from "./model.js";
 import chatView from "./view.js";
-import AIServiceFactory from "./services/ServiceSelector.js";
+import AIServiceFactory from "../services/ServiceSelector.js";
 
 
 

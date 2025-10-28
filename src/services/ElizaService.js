@@ -1,5 +1,5 @@
 import AIService from './AIService.js';
-import { getBotResponse } from 'src/js/eliza.js';
+import { getBotResponse } from '../js/eliza.js';
 
 /**
  * ElizaService - wraps Eliza chatbot
