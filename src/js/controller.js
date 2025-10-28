@@ -1,6 +1,6 @@
 import chatModel from "./model.js";
 import chatView from "./view.js";
-import { getBotResponse } from "./eliza.js";
+import AIServiceFactory from "./services/ServiceSelector.js";
 
 
 
@@ -13,6 +13,7 @@ class ChatController {
         this.model = new chatModel();
         this.view = new chatView();
 
+        this.currentService = AIServiceFactory.createService('eliza');
         this.init();
     }
 
@@ -62,14 +63,23 @@ class ChatController {
      * handle sending a new message
      * @param {string} text - User"s message text
      */
-    handleMessageSend(text) {
+    async handleMessageSend(text) {
         this.model.createMessage(text, true);
 
-        const botResponse = getBotResponse(text);
+        try {
+            const botResponse = await this.currentService.getResponse(text);
 
-        setTimeout(() => {
-            this.model.createMessage(botResponse, false);
-        }, 500);
+            setTimeout(() => {
+                this.model.createMessage(botResponse, false);}, 500);
+
+        } catch (error) {
+            console.error('AI Service Error:', error);
+
+            setTimeout(() => {
+                this.model.createMessage(
+                    `Error encountered: ${error.message}`, false);
+            }, 500);
+        }
     }
 
     /**
