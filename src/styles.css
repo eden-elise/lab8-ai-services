@@ -17,9 +17,9 @@
     --body-padding: 1.25rem;
 
     /* chat container */
-    --chat-max-width: 25rem;
-    --chat-height: 37.5rem;
-    --chat-width: 90%;
+    --chat-max-width: 50rem;
+    --chat-height: 50rem;
+    --chat-width: 95%;
     --chat-border-radius: .5rem;
 
     /* header */
