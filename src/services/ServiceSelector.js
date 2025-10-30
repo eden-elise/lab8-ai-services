@@ -1,6 +1,6 @@
 import ElizaService from "./ElizaService.js";
 import GeminiService from "./GeminiService.js";
- // import GroqService from "./GroqService.js";
+import GroqService from "./GroqService.js";
 
 /**
  * for creating AI services

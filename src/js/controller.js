@@ -83,7 +83,7 @@ class ChatController {
 
                 if (!apiKey) {
                     alert("API key required.");
-                    this.fallbackToEliza
+                    this.fallbackToEliza();
                     return;
                 }
                 this.apiKey[provider] = apiKey;
@@ -93,7 +93,7 @@ class ChatController {
             }
 
             //create new service
-            this.currentService = ServiceSelector.createService(provider, apiKey);
+            this.provider = ServiceSelector.createService(provider, apiKey);
 
             //add system message to show provider change
             this.model.createMessage(`Switched to ${this.provider.getName()}`, false);
@@ -111,7 +111,7 @@ class ChatController {
      */
     fallbackToEliza() {
         try {
-            this.currentService = ServiceSelector.createService('eliza');
+            this.provider = ServiceSelector.createService('eliza');
 
             const dropdown = document.getElementById('ai-provider');
             if (dropdown) {
@@ -119,7 +119,7 @@ class ChatController {
             }
 
             this.model.createMessage(
-                '🔄 Switched back to Eliza (Local)',
+                'Unable to switch AI service provider we have switched you back to Eliza (Local)',
                 false
             );
             console.log('Switched back to Eliza');
@@ -137,7 +137,7 @@ class ChatController {
         this.model.createMessage(text, true);
 
         try {
-            const botResponse = await this.currentService.getResponse(text);
+            const botResponse = await this.provider.getResponse(text);
 
             setTimeout(() => {
                 this.model.createMessage(botResponse, false);}, 500);
