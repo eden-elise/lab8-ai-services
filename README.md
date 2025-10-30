@@ -21,6 +21,38 @@ This project implements a modular architecture that allows seamless integration 
 - Secure API key management
 
 ---
+## Setup Instructions (For Development)
+
+If you want to run this project locally or run tests:
+
+1. Clone the repository:
+```bash
+   git clone https://github.com/eden-elise/lab8-ai-services.git
+   cd lab8-ai-services
+```
+
+2. Install dependencies:
+```bash
+   npm install
+```
+
+3. Install Playwright browsers:
+```bash
+   npx playwright install
+```
+
+4. Run locally:
+```bash
+   npx http-server src -p 8080
+```
+Open http://localhost:8080
+
+5. Run tests:
+```bash
+   npm test
+```
+
+---
 
 ## Architecture
 
