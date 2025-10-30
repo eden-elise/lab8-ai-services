@@ -370,7 +370,7 @@ I have never worked with API's before and I find it fascinating that I can build
 Understanding how cost/if I would have to pay confused me for a while. especially with Groq I couldn't quite tell if it was free or not but after reading more online i understand that each API has rates and as long as I don't hit those, there will be no payment. A reason I chose to do these two specifically was because I did not have to put a card down.
 
 **What was easier than expected:**
-using async and await avoided ahving to use callbacks or then() which was helpful. 
+using async and await avoided having to use callbacks or then() which was helpful. 
 
 **If I were building a real app:**
 I would choose Groq for a simple app because of the faster response time

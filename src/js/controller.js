@@ -1,7 +1,7 @@
 import chatModel from "./model.js";
 import chatView from "./view.js";
 import ServiceSelector from "../services/ServiceSelector.js";
-import serviceSelector from "../services/ServiceSelector.js";
+
 
 
 
@@ -83,6 +83,7 @@ class ChatController {
 
                 if (!apiKey) {
                     alert("API key required.");
+                    this.fallbackToEliza
                     return;
                 }
                 this.apiKey[provider] = apiKey;
@@ -91,16 +92,40 @@ class ChatController {
                 apiKey = this.apiKey[provider];
             }
 
-            // Create new service
+            //create new service
             this.currentService = ServiceSelector.createService(provider, apiKey);
 
-            // Add system message to show provider change
+            //add system message to show provider change
             this.model.createMessage(`Switched to ${this.provider.getName()}`, false);
             console.log(`Switched to ${this.provider.getName()}`);
 
         } catch (error) {
             console.error("Sorry there has been a provider switch error: ", error);
             alert(`Error switching provider: ${error.message}`);
+            this.fallbackToEliza();
+        }
+    }
+
+    /**
+     * fallback function for when AIService switch fails
+     */
+    fallbackToEliza() {
+        try {
+            this.currentService = ServiceSelector.createService('eliza');
+
+            const dropdown = document.getElementById('ai-provider');
+            if (dropdown) {
+                dropdown.value = 'eliza';
+            }
+
+            this.model.createMessage(
+                '🔄 Switched back to Eliza (Local)',
+                false
+            );
+            console.log('Switched back to Eliza');
+        } catch (error) {
+            console.error('Failed to fallback to Eliza:', error);
+            alert('Critical error: Unable to initialize any AI service.');
         }
     }
 
